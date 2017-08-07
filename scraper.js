@@ -24,7 +24,7 @@ client.request({url: 'https://public.api.openprocurement.org/api/2.3/contracts?o
 		.then(function (data) {	
 //////////SQLite//////////////
 var change = data.getJSON().data.changes[data.getJSON().data.changes.length-1].rationaleTypes[0];
-var changeLength = data.getJSON().data.changes.rationaleTypes[0].length;
+var changeLength = data.getJSON().data.changes.length;
 			
 console.log(changeLength)
 	/*		
@@ -71,7 +71,7 @@ if(change=="itemPriceVariation"){
 		//console.log("error_detale3")				
 	})
 	.then(function () {	
-		if (p<5) {
+		if (p<3) {
 		//piv ();
 		setTimeout(function() {piv ();},10000);
 		}	

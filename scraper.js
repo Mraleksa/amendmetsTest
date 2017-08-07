@@ -35,7 +35,7 @@ var dop=0;
 		}
 	}
 			
-console.log(data.getJSON().data.tenderID+": "+changeLength+": "+dop)			
+console.log(data.getJSON().data.tender_id+": "+changeLength+": "+dop)			
 			
 			
 	/*		

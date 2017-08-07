@@ -5,7 +5,7 @@ var db = new sqlite3.Database("data.sqlite");
 
 
  
-var start =  "2017-06-27T10:18:57.452368+03:00"
+var start =  "2017-03-27T00:18:57.452368+03:00"
 console.log("старт: "+start); 
 var p=0; var p2=0;
 
@@ -91,7 +91,7 @@ console.log(data.getJSON().data.tender_id+": "+changeLength+": "+up+" "+down)
 		//console.log("error_detale3")				
 	})
 	.then(function () {	
-		if (p<2) {
+		if (p<40) {
 		//piv ();
 		setTimeout(function() {piv ();},10000);
 		}	

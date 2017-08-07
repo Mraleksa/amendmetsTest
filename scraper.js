@@ -28,7 +28,13 @@ var changeLength = data.getJSON().data.changes.length;
 			
 
 			
-var up=0;var down=0;
+		
+			
+			
+		
+if(changeLength>0){
+
+	var up=0;var down=0;
 	for (var p = 0; p < changeLength; p++) {
 		if(data.getJSON().data.changes[p].rationaleTypes[0]=="itemPriceVariation"){
 			up=up+1;
@@ -38,14 +44,14 @@ var up=0;var down=0;
 		}
 	}
 			
-console.log(data.getJSON().data.tender_id+": "+changeLength+": "+up+" "+down)			
-			
-			
-	/*		
-if(change=="itemPriceVariation"){	
+console.log(data.getJSON().data.tender_id+": "+changeLength+": "+up+" "+down)	
+
+
+
 	var lotIdContracts = data.getJSON().data.items[0].relatedLot;
 	var dateSigned = data.getJSON().data.dateSigned;
 	var amount = data.getJSON().data.value.amount;	
+	
 	client.request({url: 'https://public.api.openprocurement.org/api/2.3/tenders/'+data.getJSON().data.tender_id})
 		.then(function (data) {
 		var startAmount;
@@ -63,9 +69,9 @@ if(change=="itemPriceVariation"){
 	//console.log(startAmount)
 	}
 	db.serialize(function() {	
-	db.run("CREATE TABLE IF NOT EXISTS data (dateModified TEXT,dateSigned TEXT,tenderID TEXT,procuringEntity TEXT,numberOfBids INT,startAmount INT,amount INT,cpv TEXT)");
-	var statement = db.prepare("INSERT INTO data VALUES (?,?,?,?,?,?,?,?)"); 	
-	statement.run(item.dateModified,dateSigned,data.getJSON().data.tenderID,data.getJSON().data.procuringEntity.name,data.getJSON().data.numberOfBids,startAmount,amount,data.getJSON().data.items[0].classification.description);
+	db.run("CREATE TABLE IF NOT EXISTS data (dateModified TEXT,dateSigned TEXT,tenderID TEXT,procuringEntity TEXT,numberOfBids INT,startAmount INT,amount INT,cpv TEXT,up INT,down INT)");
+	var statement = db.prepare("INSERT INTO data VALUES (?,?,?,?,?,?,?,?,?,?)"); 	
+	statement.run(item.dateModified,dateSigned,data.getJSON().data.tenderID,data.getJSON().data.procuringEntity.name,data.getJSON().data.numberOfBids,startAmount,amount,data.getJSON().data.items[0].classification.description,up,down);
 	//console.log(change);
 	statement.finalize();
 	});
@@ -73,7 +79,7 @@ if(change=="itemPriceVariation"){
 	.catch(function  (error) {								
 	});  
 	}
-			*/
+			
 //////////SQLite//////////////	
 	})
 	.catch(function  (error) {

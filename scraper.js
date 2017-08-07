@@ -26,7 +26,18 @@ client.request({url: 'https://public.api.openprocurement.org/api/2.3/contracts?o
 var change = data.getJSON().data.changes[data.getJSON().data.changes.length-1].rationaleTypes[0];
 var changeLength = data.getJSON().data.changes.length;
 			
-console.log(changeLength)
+
+			
+var dop=0;
+	for (var p = 0; p < changeLength; p++) {
+		if(data.getJSON().data.changes[p].rationaleTypes[0]=="itemPriceVariation"){
+			dop=dop+1;
+		}
+	}
+			
+console.log(data.getJSON().data.tenderID+": "+changeLength+": "+dop)			
+			
+			
 	/*		
 if(change=="itemPriceVariation"){	
 	var lotIdContracts = data.getJSON().data.items[0].relatedLot;
@@ -71,7 +82,7 @@ if(change=="itemPriceVariation"){
 		//console.log("error_detale3")				
 	})
 	.then(function () {	
-		if (p<3) {
+		if (p<1) {
 		//piv ();
 		setTimeout(function() {piv ();},10000);
 		}	

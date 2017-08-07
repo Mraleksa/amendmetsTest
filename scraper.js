@@ -32,7 +32,7 @@ var changeLength = data.getJSON().data.changes.length;
 			
 			
 		
-if(changeLength>0){
+//if(changeLength>0){
 
 	var up=0;var down=0;
 	for (var p = 0; p < changeLength; p++) {
@@ -78,7 +78,7 @@ if(changeLength>0){
 	})
 	.catch(function  (error) {								
 	});  
-	}
+	//}
 			
 //////////SQLite//////////////	
 	})
@@ -91,7 +91,7 @@ if(changeLength>0){
 		//console.log("error_detale3")				
 	})
 	.then(function () {	
-		if (p<70) {
+		if (p<3) {
 		//piv ();
 		setTimeout(function() {piv ();},10000);
 		}	

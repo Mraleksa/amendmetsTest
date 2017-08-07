@@ -5,8 +5,8 @@ var db = new sqlite3.Database("data.sqlite");
 
 
  
-var currentCount =  "2017-06-27T10:18:57.452368+03:00"
-console.log("старт: "+currentCount); 
+var start =  "2017-06-27T10:18:57.452368+03:00"
+console.log("старт: "+start); 
 var p=0; var p2=0;
 
 function piv(){  

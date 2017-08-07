@@ -28,14 +28,17 @@ var changeLength = data.getJSON().data.changes.length;
 			
 
 			
-var dop=0;
+var up=0;var down=0;
 	for (var p = 0; p < changeLength; p++) {
 		if(data.getJSON().data.changes[p].rationaleTypes[0]=="itemPriceVariation"){
-			dop=dop+1;
+			up=up+1;
+		}
+		if(data.getJSON().data.changes[p].rationaleTypes[0]=="priceReduction"){
+			down=down+1;
 		}
 	}
 			
-console.log(data.getJSON().data.tender_id+": "+changeLength+": "+dop)			
+console.log(data.getJSON().data.tender_id+": "+changeLength+": "+up+" "+down)			
 			
 			
 	/*		

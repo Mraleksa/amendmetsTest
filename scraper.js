@@ -91,7 +91,7 @@ console.log(data.getJSON().data.tender_id+": "+changeLength+": "+up+" "+down)
 		//console.log("error_detale3")				
 	})
 	.then(function () {	
-		if (p<40) {
+		if (p<30) {
 		//piv ();
 		setTimeout(function() {piv ();},10000);
 		}	

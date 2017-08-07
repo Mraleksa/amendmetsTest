@@ -82,7 +82,7 @@ if(change=="itemPriceVariation"){
 		//console.log("error_detale3")				
 	})
 	.then(function () {	
-		if (p<1) {
+		if (p<2) {
 		//piv ();
 		setTimeout(function() {piv ();},10000);
 		}	

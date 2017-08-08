@@ -28,7 +28,7 @@ var changeLength = data.getJSON().data.changes.length;
 			
 
 			
-console.log(changeLength)		
+//console.log(changeLength)		
 			
 			
 		
@@ -44,7 +44,7 @@ console.log(changeLength)
 		}
 	}
 			
-console.log(data.getJSON().data.tender_id+": "+changeLength+": "+up+" "+down)	
+//console.log(data.getJSON().data.tender_id+": "+changeLength+": "+up+" "+down)	
 
 
 

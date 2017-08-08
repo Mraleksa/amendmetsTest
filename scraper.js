@@ -46,7 +46,7 @@ var changeLength = data.getJSON().data.changes.length;
 			
 //console.log(data.getJSON().data.tender_id+": "+changeLength+": "+up+" "+down)	
 
-
+ 
 
 	var lotIdContracts = data.getJSON().data.items[0].relatedLot;
 	var dateSigned = data.getJSON().data.dateSigned;

@@ -91,9 +91,9 @@ var changeLength = data.getJSON().data.changes.length;
 		//console.log("error_detale3")				
 	})
 	.then(function () {	
-		if (p<200) {
+		if (p<100) {
 		//piv ();
-		setTimeout(function() {piv ();},15000);
+		setTimeout(function() {piv ();},10000);
 		}	
 		else {
 		console.log("STOP")

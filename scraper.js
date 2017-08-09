@@ -70,7 +70,7 @@ var changeLength = data.getJSON().data.changes.length;
 	//console.log(startAmount)
 	}
 	db.serialize(function() {	
-	db.run("CREATE TABLE IF NOT EXISTS data (dateModified TEXT,tender_id TEXT,id TEXT,dateSigned TEXT,tenderID TEXT,procuringEntity TEXT,numberOfBids INT,startAmount INT,amount INT,cpv TEXT,up INT,down INT)");
+	db.run("CREATE TABLE IF NOT EXISTS data (dateModified TEXT,dateSigned TEXT,tender_id TEXT,id TEXT,tenderID TEXT,procuringEntity TEXT,numberOfBids INT,startAmount INT,amount INT,cpv TEXT,up INT,down INT)");
 	var statement = db.prepare("INSERT INTO data VALUES (?,?,?,?,?,?,?,?,?,?,?,?)"); 	
 	statement.run(item.dateModified,dateSigned,tender_id,id,data.getJSON().data.tenderID,data.getJSON().data.procuringEntity.name,data.getJSON().data.numberOfBids,startAmount,amount,data.getJSON().data.items[0].classification.description,up,down);
 	//console.log(change);

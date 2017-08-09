@@ -47,7 +47,8 @@ var changeLength = data.getJSON().data.changes.length;
 //console.log(data.getJSON().data.tender_id+": "+changeLength+": "+up+" "+down)	
 
  
-
+	var tender_id = data.getJSON().data.tender_id;
+	var id = data.getJSON().data.id;		
 	var lotIdContracts = data.getJSON().data.items[0].relatedLot;
 	var dateSigned = data.getJSON().data.dateSigned;
 	var amount = data.getJSON().data.value.amount;	
@@ -69,9 +70,9 @@ var changeLength = data.getJSON().data.changes.length;
 	//console.log(startAmount)
 	}
 	db.serialize(function() {	
-	db.run("CREATE TABLE IF NOT EXISTS data (dateModified TEXT,dateSigned TEXT,tenderID TEXT,procuringEntity TEXT,numberOfBids INT,startAmount INT,amount INT,cpv TEXT,up INT,down INT)");
-	var statement = db.prepare("INSERT INTO data VALUES (?,?,?,?,?,?,?,?,?,?)"); 	
-	statement.run(item.dateModified,dateSigned,data.getJSON().data.tenderID,data.getJSON().data.procuringEntity.name,data.getJSON().data.numberOfBids,startAmount,amount,data.getJSON().data.items[0].classification.description,up,down);
+	db.run("CREATE TABLE IF NOT EXISTS data (dateModified TEXT,tender_id TEXT,id TEXT,dateSigned TEXT,tenderID TEXT,procuringEntity TEXT,numberOfBids INT,startAmount INT,amount INT,cpv TEXT,up INT,down INT)");
+	var statement = db.prepare("INSERT INTO data VALUES (?,?,?,?,?,?,?,?,?,?,?,?)"); 	
+	statement.run(item.dateModified,dateSigned,tender_id,id,data.getJSON().data.tenderID,data.getJSON().data.procuringEntity.name,data.getJSON().data.numberOfBids,startAmount,amount,data.getJSON().data.items[0].classification.description,up,down);
 	//console.log(change);
 	statement.finalize();
 	});
@@ -91,7 +92,7 @@ var changeLength = data.getJSON().data.changes.length;
 		//console.log("error_detale3")				
 	})
 	.then(function () {	
-		if (p<200) {
+		if (p<5) {
 		//piv ();
 		setTimeout(function() {piv ();},10000);
 		}	

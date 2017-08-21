@@ -4,13 +4,21 @@ var sqlite3 = require("sqlite3").verbose();
 var db = new sqlite3.Database("data.sqlite");
 
 
- 
-var start =  "2017-03-27T16:45:30.220069+03:00"
-console.log("старт: "+start); 
-var p=0; var p2=0;
+var formatTime = d3.timeFormat("%Y-%m-%d");
+
+
+db.each("SELECT dateModified FROM data ORDER BY dateModified DESC LIMIT 1", function(err, timeStart) {
+
+var start = timeStart.dateModified
+var end  = formatTime(new Date());
+
+console.log("стар full: "+start); 
+
+
+console.log("старт: "+start.replace(/T.*/, "") +"конец: "+end); 
 
 function piv(){  
-p++;
+//p++;
 client.request({url: 'https://public.api.openprocurement.org/api/2.3/contracts?offset='+start})
       .then(function (data) {
 		var dataset = data.getJSON().data;
@@ -22,29 +30,35 @@ client.request({url: 'https://public.api.openprocurement.org/api/2.3/contracts?o
 		dataset.forEach(function(item) {
 		client.request({url: 'https://public.api.openprocurement.org/api/2.3/contracts/'+item.id})
 		.then(function (data) {	
-//////////SQLite//////////////
-var change = data.getJSON().data.changes[data.getJSON().data.changes.length-1].rationaleTypes[0];
-var changeLength = data.getJSON().data.changes.length;
-			
 
-			
-//console.log(changeLength)		
-			
-			
-		
-//if(changeLength>0){
-
-	var up=0;var down=0;
-	for (var p = 0; p < changeLength; p++) {
+	var change = data.getJSON().data.changes[data.getJSON().data.changes.length-1].rationaleTypes[0];
+	var changeLength = data.getJSON().data.changes.length;
+	
+	if(change=="itemPriceVariation"){		
+		var up=0;var down=0;
+		for (var p = 0; p < changeLength; p++) {
 		if(data.getJSON().data.changes[p].rationaleTypes[0]=="itemPriceVariation"){
 			up=up+1;
 		}
 		if(data.getJSON().data.changes[p].rationaleTypes[0]=="priceReduction"){
 			down=down+1;
 		}
-	}
+		}
+
+	//if(up>0){
+	
+		var upDates="";var downDate="";
+		for (var p = 0; p < changeLength; p++) {
+		if(data.getJSON().data.changes[p].rationaleTypes[0]=="itemPriceVariation"){
+			upDates = upDates+data.getJSON().data.changes[p].dateSigned+";"
+		}
+		if(data.getJSON().data.changes[p].rationaleTypes[0]=="priceReduction"){
+			downDate = downDate+data.getJSON().data.changes[p].dateSigned+";"
+		}	
+		}
 			
-//console.log(data.getJSON().data.tender_id+": "+changeLength+": "+up+" "+down)	
+//console.log(changeLength+"-"+upDate);
+	
 	if(data.getJSON().data.changes[0].rationaleTypes[0]=="itemPriceVariation")
 		{
 			var first = data.getJSON().data.changes[0].dateSigned;
@@ -55,36 +69,60 @@ var changeLength = data.getJSON().data.changes.length;
 	var lotIdContracts = data.getJSON().data.items[0].relatedLot;
 	var dateSigned = data.getJSON().data.dateSigned;
 	var amount = data.getJSON().data.value.amount;	
+	var region = data.getJSON().data.procuringEntity.address.region;	
 	
-	client.request({url: 'https://public.api.openprocurement.org/api/2.3/tenders/'+data.getJSON().data.tender_id})
+	
+		//////////save//////////////
+		client.request({url: 'https://public.api.openprocurement.org/api/2.3/tenders/'+data.getJSON().data.tender_id})
 		.then(function (data) {
 		var startAmount;
 		if(data.getJSON().data.lots==undefined){
-		startAmount = data.getJSON().data.value.amount;
-		//console.log(startAmount)
+			startAmount = data.getJSON().data.value.amount;
 		}
 		else {
 		for (var i = 1; i <= data.getJSON().data.lots.length; i++) {
-		if(lotIdContracts==data.getJSON().data.lots[data.getJSON().data.lots.length-(i)].id){
-		startAmount =  data.getJSON().data.lots[data.getJSON().data.lots.length-(i)].value.amount
-		};			
-	   }
-	   
-	//console.log(startAmount)
-	}
+				if(lotIdContracts==data.getJSON().data.lots[data.getJSON().data.lots.length-(i)].id){
+				startAmount =  data.getJSON().data.lots[data.getJSON().data.lots.length-(i)].value.amount
+				};			
+			}
+		}
+		var save=Math.round((startAmount-amount)/startAmount*100);
+		var numberOfBids;
+		if(isNaN(data.getJSON().data.numberOfBids)){numberOfBids = 1}
+		else {numberOfBids=data.getJSON().data.numberOfBids};
+		
+		//////////SQLite//////////////
 	db.serialize(function() {	
-	db.run("CREATE TABLE IF NOT EXISTS data (dateModified TEXT,dateSigned TEXT,first TEST,tender_id TEXT,id TEXT,tenderID TEXT,procuringEntity TEXT,numberOfBids INT,startAmount INT,amount INT,cpv TEXT,up INT,down INT)");
-	var statement = db.prepare("INSERT INTO data VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)"); 	
-	statement.run(item.dateModified,dateSigned,first,tender_id,id,data.getJSON().data.tenderID,data.getJSON().data.procuringEntity.name,data.getJSON().data.numberOfBids,startAmount,amount,data.getJSON().data.items[0].classification.description,up,down);
-	//console.log(change);
+	db.run("CREATE TABLE IF NOT EXISTS data (dateModified TEXT,dateSigned TEXT,first TEXT,tenderID TEXT,procuringEntity TEXT,numberOfBids INT,startAmount INT,amount INT,save INT,cpv TEXT,region TEXT,up INT,down INT,downDate TEXT,upDates TEXT)");
+	var statement = db.prepare("INSERT INTO data VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)"); 	
+	statement.run(
+	item.dateModified,
+	dateSigned,
+	first,
+	data.getJSON().data.tenderID,
+	data.getJSON().data.procuringEntity.name.toUpperCase(),
+	numberOfBids,
+	startAmount,
+	amount,
+	save,
+	data.getJSON().data.items[0].classification.description,
+	region,
+	up,
+	down,
+	downDate,
+	upDates
+	);
 	statement.finalize();
 	});
-	})
-	.catch(function  (error) {								
-	});  
-	//}
-			
-//////////SQLite//////////////	
+	//////////SQLiteEnd//////////////
+	
+		})
+		.catch(function  (error) {									
+		}); 
+		//////////saveEnd//////////////
+	
+	
+	}		
 	})
 	.catch(function  (error) {
 		//console.log("error_detale2")				
@@ -95,14 +133,14 @@ var changeLength = data.getJSON().data.changes.length;
 		//console.log("error_detale3")				
 	})
 	.then(function () {	
-		if (p<40) {
-		//piv ();
-		setTimeout(function() {piv ();},15000);
+	
+		if (start.replace(/T.*/, "") != end) {
+			setTimeout(function() {piv ();},15000);
 		}	
 		else {
-		console.log("STOP")
-		//console.log(start.replace(/T.*/, ""))
-		}							
+			console.log("STOP")
+		}
+		
 		})
 	.catch( function (error) {
 		console.log("error")
@@ -110,4 +148,8 @@ var changeLength = data.getJSON().data.changes.length;
 	});   					
 }
 
+
+
 piv ();	
+
+})

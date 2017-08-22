@@ -11,8 +11,8 @@ var formatTime = d3.timeFormat("%Y-%m-%d");
 var start =  "2017-01-01T10:18:57.452368+03:00"
 //var start = timeStart.dateModified
 //var end  = formatTime(new Date());
-var end  = 2017-01-03
-console.log("стар full: "+start); 
+var end  = "2017-01-03"
+console.log("старт full: "+start); 
 
 
 console.log("старт: "+start.replace(/T.*/, "") +"конец: "+end); 
@@ -34,7 +34,7 @@ client.request({url: 'https://public.api.openprocurement.org/api/2.3/contracts?o
 	var change = data.getJSON().data.changes[data.getJSON().data.changes.length-1].rationaleTypes[0];
 	var changeLength = data.getJSON().data.changes.length;
 	
-	if(change=="itemPriceVariation"){		
+	//if(change=="itemPriceVariation"){		
 		var up=0;var down=0;
 		for (var p = 0; p < changeLength; p++) {
 		if(data.getJSON().data.changes[p].rationaleTypes[0]=="itemPriceVariation"){
@@ -45,7 +45,7 @@ client.request({url: 'https://public.api.openprocurement.org/api/2.3/contracts?o
 		}
 		}
 
-	//if(up>0){
+	if(up>0){
 	
 		var upDates="";var downDate="";
 		for (var p = 0; p < changeLength; p++) {

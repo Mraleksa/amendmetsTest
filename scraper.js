@@ -31,7 +31,7 @@ client.request({url: 'https://public.api.openprocurement.org/api/2.3/contracts?o
 		client.request({url: 'https://public.api.openprocurement.org/api/2.3/contracts/'+item.id})
 		.then(function (data) {	
 
-	var change = data.getJSON().data.changes[data.getJSON().data.changes.length-1].rationaleTypes[0];
+	//var change = data.getJSON().data.changes[data.getJSON().data.changes.length-1].rationaleTypes[0];
 	var changeLength = data.getJSON().data.changes.length;
 	
 	//if(change=="itemPriceVariation"){		
@@ -93,10 +93,11 @@ client.request({url: 'https://public.api.openprocurement.org/api/2.3/contracts?o
 		
 		//////////SQLite//////////////
 	db.serialize(function() {	
-	db.run("CREATE TABLE IF NOT EXISTS data (dateModified TEXT,dateSigned TEXT,first TEXT,tenderID TEXT,procuringEntity TEXT,numberOfBids INT,startAmount INT,amount INT,save INT,cpv TEXT,region TEXT,up INT,down INT,downDate TEXT,upDates TEXT)");
-	var statement = db.prepare("INSERT INTO data VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)"); 	
+	db.run("CREATE TABLE IF NOT EXISTS data (dateModified TEXT,id TEXT,dateSigned TEXT,first TEXT,tenderID TEXT,procuringEntity TEXT,numberOfBids INT,startAmount INT,amount INT,save INT,cpv TEXT,region TEXT,up INT,down INT,downDate TEXT,upDates TEXT)");
+	var statement = db.prepare("INSERT INTO data VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)"); 	
 	statement.run(
 	item.dateModified,
+	id,
 	dateSigned,
 	first,
 	data.getJSON().data.tenderID,

@@ -7,11 +7,11 @@ var db = new sqlite3.Database("data.sqlite");
 var formatTime = d3.timeFormat("%Y-%m-%d");
 
 
-//db.each("SELECT dateModified FROM data ORDER BY dateModified DESC LIMIT 1", function(err, timeStart) {
+db.each("SELECT dateModified FROM data ORDER BY dateModified DESC LIMIT 1", function(err, timeStart) {
 var start =  "2017-01-01T10:18:57.452368+03:00"
 //var start = timeStart.dateModified
-//var end  = formatTime(new Date());
-var end  = "2017-01-03"
+var end  = formatTime(new Date());
+//var end  = "2017-01-03"
 console.log("старт full: "+start); 
 
 
@@ -152,4 +152,4 @@ client.request({url: 'https://public.api.openprocurement.org/api/2.3/contracts?o
 
 piv ();	
 
-//})
+})
